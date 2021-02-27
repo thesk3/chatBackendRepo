@@ -53,7 +53,7 @@ class ChatWindow extends Component {
     var  toID = parseInt(security.user.id, 10);
     
     var data={
-      from:user.openUser.userID,
+      from:user.openUser.listID,
       to:toID,
       text: this.state.typedMsg
     }

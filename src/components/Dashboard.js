@@ -47,7 +47,7 @@ class Dashboard extends Component {
     var  toID = parseInt(security.user.id, 10);
 
     var returndata=this.props.UserList(toID);
-    const res = await axios.get("http://localhost:8080/users/getUserList", {
+    const res = await axios.get("https://chatbackenddaa.herokuapp.com/users/getUserList", {
       params: {
         id :toID
             }});
@@ -67,7 +67,7 @@ console.log("id--->",toID);
  
       var senddata={
         from:toID,
-        to:data.userID
+        to:data.listID
       }
       console.log("store-->",senddata);
 
@@ -103,7 +103,7 @@ console.log("id--->",toID);
   selectedUseTab= (user) => {
     console.log("tab user--->");
     
-    this.setState({tabUserID: user.userID});
+    this.setState({tabUserID: user.listID});
     this.setState({userSelect: user});
     
  }
@@ -176,9 +176,9 @@ console.log("id--->",toID);
       var list = <ul className="userList">
         {this.state.userData.map((post, i) => (
           
-          <li className={ this.state.tabUserID==post.userID ? 'liclass--active': '' }  onClick={() =>this.selectedUseTab(post)} key={post.userID} >
+          <li className={ this.state.tabUserID==post.listID ? 'liclass--active': '' }  onClick={() =>this.selectedUseTab(post)} key={post.listID} >
             <img src={logo} className="imgCir" alt="Canvas Logo" ></img>
-            <label className="use-name" onClick={() =>this.onAction(post)}>{post.userName}</label></li>
+            <label className="use-name" onClick={() =>this.onAction(post)}>{post.name}</label></li>
 
         ))}</ul>;
     } else {

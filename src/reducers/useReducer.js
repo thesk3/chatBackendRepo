@@ -27,7 +27,7 @@ const useReducer = (state = [], action) => {
   
       case  OPEN_CHAT_USER:
         console.log("data open chat user--->",action)
-        var data= {
+        data= {
          ...state,
           openUser: action.payload
         };
