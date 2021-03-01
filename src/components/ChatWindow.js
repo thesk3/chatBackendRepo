@@ -27,6 +27,9 @@ class ChatWindow extends Component {
   
     componentDidMount() {
     console.log("chat windows--->", this.props.data);
+        const state = store.getState();
+    console.log("state--->",state);
+
     this.scrollToBottom();
 
   } 

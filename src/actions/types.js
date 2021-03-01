@@ -5,3 +5,4 @@ export const GET_MESSAGES ="GET_MESSAGES";
 export const SET_TYPING_VALUE ="SET_TYPING_VALUE";
 export const SEND_MESSAGE ="SEND_MESSAGE";
 export const OPEN_CHAT_USER ="OPEN_CHAT_USER";
+export const BASE_URL ="http://localhost:8080";

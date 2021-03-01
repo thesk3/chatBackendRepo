@@ -4,8 +4,9 @@ import logo from '../image/wallpaper.jpg';
 import { UserList,UserMessages,addToUserList } from "../actions/securityActions";
 import axios from "axios";
 import ChatWindow from "./ChatWindow"
-import {OPEN_CHAT_USER } from "../actions/types";
+import {OPEN_CHAT_USER,BASE_URL  } from "../actions/types";
 import store from "../store";
+
 //import MediaQuery from 'react-responsive';
 
 import "./MessageInput.css";
@@ -38,28 +39,64 @@ class Dashboard extends Component {
     this.showMainBar= this.showMainBar.bind(this);
     this.selectedUseTab= this.selectedUseTab.bind(this);
     
+    this.handleResize = this.handleResize.bind(this);
+    
         
   }
+
+   handleResize (e)  {
+    console.log("e---->",window.innerWidth);
+      if(window.innerWidth<500){
+        
+        this.setState({showMain:false });
+
+      }
+   };
   
   async  componentDidMount() {
+    window.addEventListener("resize", this.handleResize);
     const state = store.getState();
     const { security } = state;
     var  toID = parseInt(security.user.id, 10);
+    console.log("state--->",state);
 
     var returndata=this.props.UserList(toID);
-    const res = await axios.get("https://chatbackenddaa.herokuapp.com/users/getUserList", {
+    const res = await axios.get(BASE_URL+"/users/getUserList", {
       params: {
         id :toID
             }});
 console.log("id--->",toID);
     this.setState({userData:res.data.data });
      
-  
+    if(window.innerWidth<500){
+        
+      this.setState({showMain:false });
+
+    }
   //  this.props.userData=res.data.data;
 //    console.log("data--->", this.state.userData.length);
 
   }
   onAction= (data) => {
+
+    if(window.innerWidth<500){
+      console.log("in if");
+   
+      this.setState({showSide : false});
+      this.setState({showMain: true});
+      console.log("tab user1--->",this.state);
+
+    }else{
+      console.log("in ifelse ");
+      this.setState({showSide :true});
+      this.setState({showMain: true});
+      
+
+    }
+    console.log("tab user1--->",this.state);
+
+
+
     console.log("on action--->", data);
     const state = store.getState();
     const { security } = state;
@@ -71,8 +108,8 @@ console.log("id--->",toID);
       }
       console.log("store-->",senddata);
 
-    this.setState({showData:true });
-    this.setState({showSide: this.state.showSide?false:true});
+    //this.setState({showData:true });
+    //this.setState({showSide: this.state.showSide?false:true});
   
     this.props.UserMessages(senddata);
 
@@ -82,7 +119,7 @@ console.log("id--->",toID);
         window.scrollTo(0, 0);
 
         // uncemnet below line to make contoinus live msg
-        // this.props.UserMessages(senddata);
+         this.props.UserMessages(senddata);
           //clearInterval(interval);
         };
       }, 3000);
@@ -92,6 +129,7 @@ console.log("id--->",toID);
        type: OPEN_CHAT_USER,
        payload: data
      })
+     console.log("tab user--->",this.state);
 
   } 
    addToUSerList= () => {
@@ -101,7 +139,21 @@ console.log("id--->",toID);
      
   }
   selectedUseTab= (user) => {
-    console.log("tab user--->");
+ //   console.log("tab user--->",this.state.showSide);
+    if(window.innerWidth<500){
+      console.log("in if");
+   
+      //this.setState({showSide: false});
+      //this.setState({showMain: true});
+
+    }else{
+      console.log("in ifelse ");
+ 
+     // this.setState({showSide: true});
+
+    }
+    console.log("tab user--->",this.state);
+
     
     this.setState({tabUserID: user.listID});
     this.setState({userSelect: user});
@@ -155,6 +207,9 @@ console.log("id--->",toID);
 
   showSideBar(){
     //this.setState({showSide: this.state.showSide?false:true});
+    this.setState({showSide : true});
+    this.setState({showMain: false});
+
     
   }
   showMainBar(){
@@ -225,51 +280,56 @@ console.log("id--->",toID);
     }
 
     if(this.state.showSide){
-      var side=<div></div>
+      var side= <div className="col-md-3 nopadding asd ">
+       
+      <div className="sideBar">
+    
+    <div>
+<div style={{textAlign:"center",padding:"9px"}}><label onClick={() =>this.addToUSerList()}>
+{this.state.addUserUI?"Cancel ":"Add User"}</label></div>
+
+  
+            {addUser}
+      {list}
+
+    </div>
+
+  </div>
+
+      </div>
     }else{
-       side=<div>hide side bar </div>
+      main=<div>hide  side</div>
 
     }
     if(this.state.showMain){
-      var main=     <ChatWindow data={this.state.showData}/>
+      var main=      <div className="col-md-9 ">
+
+      <div className="col-md-12 ">
+
+    <h3> <span className="sideback-icon" style={{    'fontSize': '30px'}} onClick={() =>this.showSideBar()}  >&larr;</span> <b> {this.state.userSelect.name}</b></h3>
+      </div>
+      <div className="col-md-12 cus-sc side-chat">
+
+      {userInfo}
+
+      <ChatWindow data={this.state.showData} userDataC={this.state.userSelect}/>
+      <br />
+      <hr />
+      </div>
+    </div>
     }else{
-       main=<div>hide  minabar</div>
 
     }
+
 
 
     return (
       <div className="projects">
         <div className="container-fluid">
           <div className="row ">
-            <div className="col-md-3 nopadding asd ">
-       
-            <div className="sideBar">
-          
-          <div>
-    <div style={{textAlign:"center",padding:"9px"}}><label onClick={() =>this.addToUSerList()}>
-    {this.state.addUserUI?"Cancel ":"Add User"}</label></div>
-    
-        
-                  {addUser}
-            {list}
-    
-          </div>
-    
-        </div>
-    
-            </div>
+              {side}
 
-            <div className="col-md-9 cus-sc side-chat">
-
- 
-              {userInfo}
-
-              <ChatWindow data={this.state.showData} userDataC={this.state.userSelect}/>
-              <br />
-              <hr />
-
-            </div>
+           {main}
 
             
           </div>
