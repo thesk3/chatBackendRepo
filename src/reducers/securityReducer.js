@@ -16,6 +16,7 @@ const booleanActionPayload = payload => {
 export default function(state = initialState, action) {
   switch (action.type) {
     case SET_CURRENT_USER:
+      console.log("set curent user------>",action);
       return {
         ...state,
         validToken: booleanActionPayload(action.payload),
